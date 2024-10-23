@@ -3,11 +3,7 @@ import { auth } from '@clerk/nextjs/server';
 import { StatusCodes } from 'http-status-codes';
 
 import cloudinary from '@/config/cloudinary.config';
-
-interface CloudinaryUploadResult {
-    public_id: string;
-    [key: string]: any;
-}
+import { CloudinaryUploadResult } from '@/types/cloudinaryResult.type';
 
 export async function POST(request: NextRequest) {
     const { userId } = auth();
