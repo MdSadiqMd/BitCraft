@@ -6,7 +6,7 @@ import axios from 'axios';
 import socialFormats from '@/constants/socialFormats.constant';
 
 type SocialFormat = keyof typeof socialFormats;
-export default function SocialShare() {
+const SocialShare = () => {
     const [uploadedImage, setUploadedImage] = useState<string | null>(null);
     const [selectedFormat, setSelectedFormat] = useState<SocialFormat>("Instagram Square (1:1)");
     const [isUploading, setIsUploading] = useState(false);
@@ -137,4 +137,6 @@ export default function SocialShare() {
             </div>
         </div>
     );
-}
+};
+
+export default SocialShare;
