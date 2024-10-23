@@ -1,9 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { auth } from '@clerk/nextjs/server';
+import { PrismaClient } from '@prisma/client';
 import { StatusCodes } from 'http-status-codes';
 
 import cloudinary from '@/config/cloudinary.config';
-import { cloudinaryImageUploadResult as CloudinaryUploadResult } from '@/types';
+import { cloudinaryVideoUploadResult as CloudinaryUploadResult } from '@/types';
+
+const prisma = new PrismaClient();
 
 export async function POST(request: NextRequest) {
     const { userId } = auth();
@@ -16,6 +19,9 @@ export async function POST(request: NextRequest) {
     try {
         const formData = await request.formData();
         const file = formData.get("file") as File | null;
+        const title = formData.get("title") as string;
+        const description = formData.get("description") as string;
+        const originalSize = formData.get("originalSize") as string;
         if (!file) {
             return NextResponse.json({
                 error: "File not found"
@@ -27,7 +33,13 @@ export async function POST(request: NextRequest) {
         const result = await new Promise<CloudinaryUploadResult>(
             (resolve, reject) => {
                 const uploadStream = cloudinary.uploader.upload_stream(
-                    { folder: "bit-craft-image-uploads" },
+                    {
+                        resource_type: "video",
+                        folder: "video-uploads",
+                        transformation: [
+                            { quality: "auto", fetch_format: "mp4" },
+                        ]
+                    },
                     (error, result) => {
                         if (error) reject(error);
                         else resolve(result as CloudinaryUploadResult);
@@ -36,13 +48,25 @@ export async function POST(request: NextRequest) {
                 uploadStream.end(buffer);
             }
         );
+        const video = await prisma.video.create({
+            data: {
+                title,
+                description,
+                publicId: result.public_id,
+                originalSize: originalSize,
+                compressedSize: String(result.bytes),
+                duration: result.duration || 0,
+            }
+        });
         return NextResponse.json({
-            publicId: result.public_id
+            data: video
         }, { status: StatusCodes.OK });
     } catch (error) {
         console.log("Image Upload Failed: ", error);
         return NextResponse.json({
             error: "Image Upload Failed"
         }, { status: StatusCodes.INTERNAL_SERVER_ERROR });
+    } finally {
+        await prisma.$disconnect();
     }
 }
