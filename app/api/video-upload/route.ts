@@ -8,6 +8,16 @@ import { cloudinaryVideoUploadResult as CloudinaryUploadResult } from '@/types';
 
 const prisma = new PrismaClient();
 
+/**
+ * Handles POST request to /api/video-upload
+ * Uploads a file to Cloudinary in the video-uploads folder
+ * Returns a JSON response with the created video in JSON format
+ * If the user is not authenticated, returns a 401 Unauthorized response
+ * If the file is not found, returns a 404 Not Found response
+ * If there's an error during the upload, returns a 500 Internal Server Error response
+ * @param request NextRequest object
+ * @returns NextResponse with status 200 and the created video in JSON format
+ */
 export async function POST(request: NextRequest) {
     const { userId } = auth();
     if (!userId) {

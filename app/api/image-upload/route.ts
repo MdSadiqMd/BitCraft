@@ -5,6 +5,16 @@ import { StatusCodes } from 'http-status-codes';
 import cloudinary from '@/config/cloudinary.config';
 import { cloudinaryImageUploadResult as CloudinaryUploadResult } from '@/types';
 
+/**
+ * Handles POST request to /api/image-upload
+ * Uploads a file to Cloudinary in the bit-craft-image-uploads folder
+ * Returns a JSON response with the public_id of the uploaded file
+ * If the user is not authenticated, returns a 401 Unauthorized response
+ * If the file is not found, returns a 404 Not Found response
+ * If there's an error during the upload, returns a 500 Internal Server Error response
+ * @param request NextRequest object
+ * @returns NextResponse with status 200 and the publicId of the uploaded image in JSON format
+ */
 export async function POST(request: NextRequest) {
     const { userId } = auth();
     if (!userId) {
