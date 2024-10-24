@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { PrismaClient } from "@prisma/client";
 import { StatusCodes } from "http-status-codes";
+import { auth } from "@clerk/nextjs/server";
 
 const prisma = new PrismaClient();
 
@@ -12,8 +13,18 @@ const prisma = new PrismaClient();
  * If there's an error, returns NextResponse with status 500 and the error message in JSON format
  */
 export async function GET() {
+    const { userId } = auth();
+    if (!userId) {
+        return NextResponse.json({
+            message: "Unauthorized"
+        }, { status: StatusCodes.UNAUTHORIZED });
+    }
+    
     try {
         const videos = await prisma.video.findMany({
+            where: {
+                userId: userId as string
+            },
             orderBy: {
                 createdAt: 'desc'
             }
