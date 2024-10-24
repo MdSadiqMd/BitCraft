@@ -36,7 +36,7 @@ const Home = () => {
     }, [fetchVideos]);
 
     const handleDownload = useCallback((url: string, title: string) => {
-        return () => {
+        () => {
             const link = document.createElement("a");
             link.href = url;
             link.setAttribute("download", `${title}.mp4`);

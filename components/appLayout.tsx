@@ -6,8 +6,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { useClerk, useUser } from "@clerk/nextjs";
 import {
     LogOutIcon,
-    MenuIcon,
-    ImageIcon,
+    Pickaxe,
 } from "lucide-react";
 
 import { sidebarItems } from "@/constants/sidebarItems.constant";
@@ -49,12 +48,12 @@ const AppLayout = ({
                                 htmlFor="sidebar-drawer"
                                 className="btn btn-square btn-ghost drawer-button"
                             >
-                                <MenuIcon />
+                                <Pickaxe />
                             </label>
                         </div>
                         <div className="flex-1">
                             <Link href="/" onClick={handleLogoClick}>
-                                <div className="btn btn-ghost normal-case text-2xl font-bold tracking-tight cursor-pointer">
+                                <div className="btn btn-ghost normal-case text-xl sm:text-2xl font-bold tracking-tight cursor-pointer">
                                     Bit Craft
                                 </div>
                             </Link>
@@ -70,7 +69,7 @@ const AppLayout = ({
                                             />
                                         </div>
                                     </div>
-                                    <span className="text-sm truncate max-w-xs lg:max-w-md">
+                                    <span className="text-sm truncate max-w-[120px] sm:max-w-xs lg:max-w-md">
                                         {user.username || user.emailAddresses[0].emailAddress}
                                     </span>
                                     <button
@@ -95,7 +94,7 @@ const AppLayout = ({
                 <label htmlFor="sidebar-drawer" className="drawer-overlay"></label>
                 <aside className="bg-base-200 w-64 h-full flex flex-col">
                     <div className="flex items-center justify-center py-4">
-                        <ImageIcon className="w-10 h-10 text-primary" />
+                        <Pickaxe className="w-10 h-10 text-primary" />
                     </div>
                     <ul className="menu p-4 w-full text-base-content flex-grow">
                         {sidebarItems.map((item) => (
