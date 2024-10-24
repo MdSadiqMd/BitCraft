@@ -4,6 +4,7 @@ import { Download, Clock, FileDown, FileUp } from "lucide-react";
 import dayjs from 'dayjs';
 import relativeTime from "dayjs/plugin/relativeTime";
 import { filesize } from "filesize";
+import Image from 'next/image';
 
 import { VideoCardProps } from '@/types';
 
@@ -58,7 +59,7 @@ const VideoCard: React.FC<VideoCardProps> = ({ video, onDownload }) => {
                         <p className="text-red-500">Preview not available</p>
                     </div>
                 ) : (
-                    <img
+                    <Image
                         src={getCldUrl(video.publicId, 'thumbnail')}
                         alt={video.title}
                         className="w-full h-full object-cover"
