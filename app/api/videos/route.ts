@@ -20,12 +20,12 @@ export async function GET() {
         });
         return NextResponse.json({
             videos
-        }, StatusCodes.OK as any);
+        }, { status: StatusCodes.OK });
     } catch (error) {
-        console.log("Error in Retriving Videos: ", error);
+        console.log("Error in Retrieving Videos: ", error);
         return NextResponse.json({
-            message: "Error in Retriving Videos: " + error
-        }, StatusCodes.INTERNAL_SERVER_ERROR as any);
+            message: "Error in Retrieving Videos: " + error
+        }, { status: StatusCodes.INTERNAL_SERVER_ERROR });
     } finally {
         await prisma.$disconnect();
     }

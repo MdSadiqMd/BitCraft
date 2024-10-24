@@ -1,7 +1,76 @@
-export default function Home() {
+"use client";
+import React, { useState, useEffect, useCallback } from 'react';
+import axios from 'axios';
+
+import VideoCard from '@/components/videoCard';
+import { Video } from '@/types';
+
+const Home = () => {
+    const [videos, setVideos] = useState<Video[]>([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState<string | null>(null);
+
+    const fetchVideos = useCallback(async () => {
+        try {
+            const response = await axios.get("/api/videos");
+            if (response.status === 200) {
+                const videoData = response.data.videos;
+                if (Array.isArray(videoData)) {
+                    setVideos(videoData);
+                } else {
+                    throw new Error("Unexpected response format: expected an array");
+                }
+            } else {
+                throw new Error("Failed to fetch videos");
+            }
+        } catch (error) {
+            console.error(error);
+            setError("Failed to fetch videos");
+        } finally {
+            setLoading(false);
+        }
+    }, []);
+
+    useEffect(() => {
+        fetchVideos();
+    }, [fetchVideos]);
+
+    const handleDownload = useCallback((url: string, title: string) => {
+        return () => {
+            const link = document.createElement("a");
+            link.href = url;
+            link.setAttribute("download", `${title}.mp4`);
+            link.setAttribute("target", "_blank");
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        };
+    }, []);
+
+    if (loading) {
+        return <div>Loading...</div>;
+    }
+
     return (
-        <main className="flex min-h-screen flex-col items-center justify-between p-24">
-            <h1>Hello, world!</h1>
-        </main>
+        <div className="container mx-auto p-4">
+            <h1 className="text-2xl font-bold mb-4">Your Videos</h1>
+            {videos.length === 0 ? (
+                <div className="text-center text-lg text-gray-500">
+                    No videos available
+                </div>
+            ) : (
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                    {Array.isArray(videos) && videos.map((video) => (
+                        <VideoCard
+                            key={video.id}
+                            video={video}
+                            onDownload={handleDownload}
+                        />
+                    ))}
+                </div>
+            )}
+        </div>
     );
-}
+};
+
+export default Home;
