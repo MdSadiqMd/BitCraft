@@ -55,7 +55,7 @@ const AppLayout = ({
                         <div className="flex-1">
                             <Link href="/" onClick={handleLogoClick}>
                                 <div className="btn btn-ghost normal-case text-2xl font-bold tracking-tight cursor-pointer">
-                                    Cloudinary Showcase
+                                    Bit Craft
                                 </div>
                             </Link>
                         </div>
