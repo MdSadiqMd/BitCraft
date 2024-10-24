@@ -67,6 +67,8 @@ const AppLayout = ({
                                             <Image
                                                 src={user.imageUrl}
                                                 alt={user.username || user.emailAddresses[0].emailAddress}
+                                                width={32}
+                                                height={32}
                                             />
                                         </div>
                                     </div>
